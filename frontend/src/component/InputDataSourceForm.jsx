@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
+import { inject } from 'mobx-react';
 
+@inject('databaseInformation')
 class InputDataSourceForm extends Component {
     state = {
         vendor: '',
@@ -7,11 +9,31 @@ class InputDataSourceForm extends Component {
         id: '',
         password: ''
     }
+
     handleChange = (e) => {
+        const { databaseInformation } = this.props;
         this.setState({
            [e.target.name]: e.target.value
         });
+        console.log("name:", e.target.name);
+        switch(e.target.name) {
+            case 'vendor':
+                databaseInformation.setVendor(e.target.value);
+                break;
+            case 'url':
+                databaseInformation.setUrl(e.target.value);
+                break;
+            case 'id':
+                databaseInformation.setId(e.target.value);
+                break;
+            case 'password':
+                databaseInformation.setPassword(e.target.value);    
+                break;
+            default:
+                break;
+        }
     }
+
     render() {
         return (
             <form>
