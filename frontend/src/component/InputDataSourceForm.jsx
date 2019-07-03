@@ -1,5 +1,26 @@
 import React, { Component } from 'react';
 import { inject } from 'mobx-react';
+import clsx from 'clsx';
+import { makeStyles } from '@material-ui/core/styles';
+import TextField from '@material-ui/core/TextField';
+
+const useStyles = makeStyles(theme => ({
+    container: {
+        display: 'flex',
+        flexWrap: 'wrap',
+    },
+    textField: {
+        marginLeft: theme.spacing(1),
+        marginRight: theme.spacing(1),
+        width: 200,
+    },
+    dense: {
+        marginTop: 19,
+    },
+    menu: {
+        width: 200,
+    },
+}));
 
 @inject('databaseInformation')
 class InputDataSourceForm extends Component {
@@ -37,32 +58,43 @@ class InputDataSourceForm extends Component {
     render() {
         return (
             <form>
-                <input
-                    placeholder="vendor"
+                <TextField
+                    required
+                    label="Vendor"
+                    className={clsx(useStyles.textField, useStyles.dense)}
+                    margin="dense"
                     value={this.state.vendor}
                     onChange={this.handleChange}
                     name="vendor"
                 />
-                <input
-                    placeholder="url"
-                    value={this.state.url}
-                    onChange={this.handleChange}
-                    name="url"
-                />
-                <input
-                    placeholder="id"
+                <TextField
+                    required
+                    label="Id"
+                    className={clsx(useStyles.textField, useStyles.dense)}
+                    margin="dense"
                     value={this.state.id}
                     onChange={this.handleChange}
                     name="id"
                 />
-                <input
+                <TextField
+                    required
+                    label="Password"
+                    className={clsx(useStyles.textField, useStyles.dense)}
+                    margin="dense"
                     type="password"
-                    placeholder="password"
                     value={this.state.password}
                     onChange={this.handleChange}
                     name="password"
                 />
-                <div>{this.state.vendor} {this.state.url} {this.state.id} {this.state.password}</div>
+                <TextField
+                    required
+                    label="Url"
+                    className={clsx(useStyles.textField, useStyles.dense)}
+                    margin="dense"
+                    value={this.state.url}
+                    onChange={this.handleChange}
+                    name="url"
+                />
             </form>
         );
     }

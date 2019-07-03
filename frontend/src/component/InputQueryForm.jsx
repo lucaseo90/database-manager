@@ -1,5 +1,26 @@
 import React, { Component } from 'react';
 import { inject } from 'mobx-react';
+import clsx from 'clsx';
+import { makeStyles } from '@material-ui/core/styles';
+import TextField from '@material-ui/core/TextField';
+
+const useStyles = makeStyles(theme => ({
+    container: {
+        display: 'flex',
+        flexWrap: 'wrap',
+    },
+    textField: {
+        marginLeft: theme.spacing(1),
+        marginRight: theme.spacing(1),
+        width: 200,
+    },
+    dense: {
+        marginTop: 19,
+    },
+    menu: {
+        width: 200,
+    },
+}));
 
 @inject('databaseInformation')
 class InputQueryForm extends Component {
@@ -23,7 +44,11 @@ class InputQueryForm extends Component {
     render() {
         return (
             <form>
-                <input
+                <TextField
+                    required
+                    label="Query"
+                    className={clsx(useStyles.textField, useStyles.dense)}
+                    margin="dense"
                     placeholder="query"
                     value={this.state.query}
                     onChange={this.handleChange}

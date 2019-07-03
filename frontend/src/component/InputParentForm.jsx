@@ -1,13 +1,25 @@
 import React, { Component } from 'react';
 import { observer, inject } from 'mobx-react';
+import { makeStyles } from '@material-ui/core/styles';
+import Button from '@material-ui/core/Button';
 
 import InputDataSourceForm from "./InputDataSourceForm";
 import InputQueryForm from "./InputQueryForm";
 import DatabaseService from "../service/DatabaseService";
 
+const useStyles = makeStyles(theme => ({
+    button: {
+        margin: theme.spacing(1),
+    },
+    input: {
+        display: 'none',
+    },
+}));
+
 @inject('databaseInformation')
 @observer
 class InputParentForm extends Component {
+
     executeQueryClicked(vendor, url, id, password, query) {
         DatabaseService.executeQuery(vendor, url, id, password, query)
             .then(
@@ -24,13 +36,13 @@ class InputParentForm extends Component {
                 <InputDataSourceForm />
                 <InputQueryForm />
                 <div className="row">
-                    <button className="btn btn-success"
+                    <Button variant="contained" color="primary" className={useStyles.button}
                             onClick={() => this.executeQueryClicked(
                                 databaseInformation.vendor,
                                 databaseInformation.url,
                                 databaseInformation.id,
                                 databaseInformation.password,
-                                databaseInformation.query)}>Execute</button>
+                                databaseInformation.query)}>Execute</Button>
                 </div>
             </form>
         );
