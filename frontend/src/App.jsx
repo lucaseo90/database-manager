@@ -9,7 +9,7 @@ class App extends Component {
         return (
             <div className="container">
                 <DatabaseManagerApp />
-                <InputParentForm />
+                <InputParentForm store={this.props.store}/>
                 <ListQueryResultsComponent />
             </div>
         );

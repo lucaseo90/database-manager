@@ -17,6 +17,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 @inject('databaseInformation')
+@inject('databaseQueryResult')
 @observer
 class InputParentForm extends Component {
 
@@ -24,7 +25,9 @@ class InputParentForm extends Component {
         DatabaseService.executeQuery(vendor, url, id, password, query)
             .then(
                 response => {
-
+                    const { databaseQueryResult } = this.props;
+                    console.log(response);
+                    databaseQueryResult.setResult(response);
                 }
             )
     }
