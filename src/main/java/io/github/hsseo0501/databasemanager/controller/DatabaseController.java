@@ -34,7 +34,7 @@ public class DatabaseController {
         CommonResponse commonResponse = new CommonResponse();
         try {
             ResultSet resultSet = queryExecuteService.executeQuery(vendor, url, id, password, query);
-            List<Object> data = queryExecuteService.convertResultSetToMap(resultSet);
+            List<Object> data = queryExecuteService.convertResultSetToList(resultSet);
             return ResponseEntity.ok(commonResponse.makeJsonUsingData(ResultCode.SUCCESS, data));
         } catch (Exception e) {
             logger.error(logTitleMethod + e.getMessage());

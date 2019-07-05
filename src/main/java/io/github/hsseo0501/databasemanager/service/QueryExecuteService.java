@@ -6,5 +6,5 @@ import java.util.List;
 public interface QueryExecuteService {
     ResultSet executeQuery(String vendor, String url, String id, String password, String query) throws Exception;
 
-    List<Object> convertResultSetToMap(ResultSet resultSet) throws Exception;
+    List<Object> convertResultSetToList(ResultSet resultSet) throws Exception;
 }

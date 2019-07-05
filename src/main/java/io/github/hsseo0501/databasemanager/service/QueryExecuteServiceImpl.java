@@ -27,7 +27,7 @@ public class QueryExecuteServiceImpl implements QueryExecuteService {
     }
 
     @Override
-    public List<Object> convertResultSetToMap(ResultSet resultSet) throws Exception {
+    public List<Object> convertResultSetToList(ResultSet resultSet) throws Exception {
         List<Object> data = new LinkedList<>();
 
         ResultSetMetaData resultSetMetaData = resultSet.getMetaData();
