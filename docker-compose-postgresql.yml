@@ -1,0 +1,31 @@
+version: '3'
+
+services:
+  test-postgres-compose:
+    image: postgres
+    environment:
+      POSTGRES_DB: "test_db"
+      POSTGRES_USER: "test"
+      POSTGRES_PASSWORD: "pwd"
+    ports:
+      - "15432:5432"
+    volumes:
+      - /Users/$USER/docker/pgsql/pgdata:/var/lib/postgresql/data
+    networks:
+      - postgres-compose-network
+
+  test-pgadmin-compose:
+    image: dpage/pgadmin4
+    environment:
+      PGADMIN_DEFAULT_EMAIL: "test"
+      PGADMIN_DEFAULT_PASSWORD: "pwd"
+    ports:
+      - "16543:80"
+    depends_on:
+      - test-postgres-compose
+    networks:
+      - postgres-compose-network
+
+networks:
+  postgres-compose-network:
+    driver: bridge
