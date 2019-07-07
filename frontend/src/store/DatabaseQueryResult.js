@@ -1,9 +1,9 @@
-import { observable, action } from 'mobx';
+import {action, observable} from 'mobx';
 
 export default class DatabaseQueryResult {
-    @observable result = '';
+    @observable result;
 
     @action setResult = (value) => {
-        this.result = value;
+        this.result = value.data.data;
     }
 }

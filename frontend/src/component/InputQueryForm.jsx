@@ -1,7 +1,7 @@
-import React, { Component } from 'react';
-import { inject } from 'mobx-react';
+import React, {Component} from 'react';
+import {inject} from 'mobx-react';
 import clsx from 'clsx';
-import { makeStyles } from '@material-ui/core/styles';
+import {makeStyles} from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 
 const useStyles = makeStyles(theme => ({
@@ -30,7 +30,7 @@ class InputQueryForm extends Component {
 
     handleChange = (e) => {
         console.log("Value from event:", e.target.value);
-        const { databaseInformation } = this.props;
+        const {databaseInformation} = this.props;
         this.setState({
             query: e.target.value
         }, () => {
@@ -54,7 +54,6 @@ class InputQueryForm extends Component {
                     onChange={this.handleChange}
                     name="query"
                 />
-                <div>{this.state.query}</div>
             </form>
         );
     }

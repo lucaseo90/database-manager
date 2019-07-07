@@ -1,11 +1,12 @@
-import React, { Component } from 'react';
-import { observer, inject } from 'mobx-react';
-import { makeStyles } from '@material-ui/core/styles';
+import React, {Component} from 'react';
+import {inject, observer} from 'mobx-react';
+import {makeStyles} from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 
 import InputDataSourceForm from "./InputDataSourceForm";
 import InputQueryForm from "./InputQueryForm";
 import DatabaseService from "../service/DatabaseService";
+import CustomTable from "./Table";
 
 const useStyles = makeStyles(theme => ({
     button: {
@@ -25,7 +26,7 @@ class InputParentForm extends Component {
         DatabaseService.executeQuery(vendor, url, id, password, query)
             .then(
                 response => {
-                    const { databaseQueryResult } = this.props;
+                    const {databaseQueryResult} = this.props;
                     console.log(response);
                     databaseQueryResult.setResult(response);
                 }
@@ -33,11 +34,12 @@ class InputParentForm extends Component {
     }
 
     render() {
-        const { databaseInformation } = this.props;
+        const {databaseInformation} = this.props;
+        const {databaseQueryResult} = this.props;
         return (
             <form>
-                <InputDataSourceForm />
-                <InputQueryForm />
+                <InputDataSourceForm/>
+                <InputQueryForm/>
                 <div className="row">
                     <Button variant="contained" color="primary" className={useStyles.button}
                             onClick={() => this.executeQueryClicked(
@@ -46,6 +48,10 @@ class InputParentForm extends Component {
                                 databaseInformation.id,
                                 databaseInformation.password,
                                 databaseInformation.query)}>Execute</Button>
+                </div>
+                <div>
+                    <br/> Table 1 data test
+                    <CustomTable data={databaseQueryResult.result}/>
                 </div>
             </form>
         );
