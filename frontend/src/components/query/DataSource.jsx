@@ -23,7 +23,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 @inject('databaseInformation')
-class InputDataSourceForm extends Component {
+class DataSource extends Component {
     state = {
         vendor: '',
         url: '',
@@ -100,4 +100,4 @@ class InputDataSourceForm extends Component {
     }
 }
 
-export default InputDataSourceForm;
+export default DataSource;

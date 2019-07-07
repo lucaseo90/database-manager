@@ -3,9 +3,9 @@ import {inject, observer} from 'mobx-react';
 import {makeStyles} from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 
-import InputDataSourceForm from "./InputDataSourceForm";
-import InputQueryForm from "./InputQueryForm";
-import DatabaseService from "../service/DatabaseService";
+import DataSource from "./DataSource";
+import Query from "./Query";
+import DatabaseService from "../../containers/query/Query";
 import CustomTable from "./Table";
 
 const useStyles = makeStyles(theme => ({
@@ -20,7 +20,7 @@ const useStyles = makeStyles(theme => ({
 @inject('databaseInformation')
 @inject('databaseQueryResult')
 @observer
-class InputParentForm extends Component {
+class Input extends Component {
 
     executeQueryClicked(vendor, url, id, password, query) {
         DatabaseService.executeQuery(vendor, url, id, password, query)
@@ -38,8 +38,8 @@ class InputParentForm extends Component {
         const {databaseQueryResult} = this.props;
         return (
             <form>
-                <InputDataSourceForm/>
-                <InputQueryForm/>
+                <DataSource/>
+                <Query/>
                 <div className="row">
                     <Button variant="contained" color="primary" className={useStyles.button}
                             onClick={() => this.executeQueryClicked(
@@ -58,4 +58,4 @@ class InputParentForm extends Component {
     }
 }
 
-export default InputParentForm;
+export default Input;

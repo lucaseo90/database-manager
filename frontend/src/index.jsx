@@ -2,10 +2,10 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import {Provider} from 'mobx-react';
 import './index.css';
-import App from './App';
-import * as serviceWorker from './serviceWorker';
-import DatabaseInformationStore from './store/DatabaseInformation'
-import DatabaseQueryResultStore from './store/DatabaseQueryResult'
+import App from './components/app/App';
+import * as serviceWorker from './service-worker';
+import DatabaseInformationStore from './store/data-source/DataSource'
+import DatabaseQueryResultStore from './store/query/QueryResult'
 
 const databaseInformation = new DatabaseInformationStore();
 const databaseQueryResult = new DatabaseQueryResultStore();

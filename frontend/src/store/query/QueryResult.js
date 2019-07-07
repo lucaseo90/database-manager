@@ -1,6 +1,6 @@
 import {action, observable} from 'mobx';
 
-export default class DatabaseQueryResult {
+export default class QueryResult {
     @observable result;
 
     @action setResult = (value) => {

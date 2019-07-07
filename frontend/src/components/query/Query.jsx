@@ -23,7 +23,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 @inject('databaseInformation')
-class InputQueryForm extends Component {
+class Query extends Component {
     state = {
         query: ''
     }
@@ -59,4 +59,4 @@ class InputQueryForm extends Component {
     }
 }
 
-export default InputQueryForm;
+export default Query;
