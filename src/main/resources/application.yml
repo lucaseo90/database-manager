@@ -1,2 +1,16 @@
 server:
   port: 9000
+
+spring:
+  jpa:
+    hibernate:
+      ddl-auto: create
+    show-sql: true
+
+  messages:
+    basename: validation
+
+  mvc:
+    view:
+      prefix: /
+      suffix: .jsp
