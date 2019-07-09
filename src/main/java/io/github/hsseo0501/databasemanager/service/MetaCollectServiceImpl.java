@@ -23,23 +23,23 @@ public class MetaCollectServiceImpl implements MetaCollectService {
 
             while (columns.next()) {
                 Column column = new Column();
-                column.setCatalog(columns.getString("TABLE_CAT"));
-                column.setSchema(columns.getString("TABLE_SCHEM"));
-                column.setTableName(columns.getString("TABLE_NAME"));
-                column.setColumnName(columns.getString("COLUMN_NAME"));
-                column.setDataType(columns.getString("DATA_TYPE"));
-                column.setTypeName(columns.getString("TYPE_NAME"));
-                column.setColumnSize(columns.getString("COLUMN_SIZE"));
-                int nullable = columns.getInt("NULLABLE");
+                column.setCatalog(columns.getString(Constants.Database.COLUMN_META_TABLE));
+                column.setSchema(columns.getString(Constants.Database.COLUMN_META_TABLE_SCHEMA));
+                column.setTableName(columns.getString(Constants.Database.COLUMN_META_TABLE_NAME));
+                column.setColumnName(columns.getString(Constants.Database.COLUMN_META_NAME));
+                column.setDataType(columns.getString(Constants.Database.COLUMN_META_DATA_TYPE));
+                column.setTypeName(columns.getString(Constants.Database.COLUMN_META_TYPE_NAME));
+                column.setColumnSize(columns.getString(Constants.Database.COLUMN_META_SIZE));
+                int nullable = columns.getInt(Constants.Database.COLUMN_META_NULLABLE);
                 if (nullable == DatabaseMetaData.columnNullable) {
                     column.setNullable("true");
                 } else if (nullable == DatabaseMetaData.columnNoNulls) {
                     column.setNullable("false");
                 } else {
-                    column.setNullable("false");
+                    column.setNullable("unknown");
                 }
-                column.setIsNullable(columns.getString("IS_NULLABLE"));
-                column.setOrdinalPosition(columns.getString("ORDINAL_POSITION"));
+                column.setIsNullable(columns.getString(Constants.Database.COLUMN_META_IS_NULLABLE));
+                column.setOrdinalPosition(columns.getString(Constants.Database.COLUMN_META_ORDINAL_POSITION));
                 columnList.add(column);
             }
         } else {
