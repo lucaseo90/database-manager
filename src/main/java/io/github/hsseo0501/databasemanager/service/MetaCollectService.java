@@ -1,5 +1,7 @@
 package io.github.hsseo0501.databasemanager.service;
 
+import io.github.hsseo0501.databasemanager.model.Column;
+
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.util.List;
@@ -7,7 +9,7 @@ import java.util.Map;
 
 public interface MetaCollectService {
 
-    ResultSet getColumns(Connection connection, String tableName);
+    List<Column> getColumns(String vendor, String url, String id, String password, String tableName) throws Exception;
 
     ResultSet getPrimaryKeys(Connection connection, String tableName);
 
