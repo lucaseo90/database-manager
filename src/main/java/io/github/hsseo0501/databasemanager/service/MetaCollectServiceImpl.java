@@ -9,6 +9,7 @@ import java.sql.*;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.StringTokenizer;
 
 @Service
 public class MetaCollectServiceImpl implements MetaCollectService {
@@ -75,8 +76,22 @@ public class MetaCollectServiceImpl implements MetaCollectService {
     }
 
     @Override
-    public List<String> getSQLKeywords(Connection connection) {
-        return null;
+    public List<String> getSQLKeywords(String vendor, String url, String id, String password, String tableName) throws Exception {
+        List<String> keywordList = new LinkedList<>();
+        if (vendor.equalsIgnoreCase(Constants.Database.DB_VENDOR_POSTGRESQL)) {
+            Class.forName(Constants.Database.JDBC_DRIVER_POSTGRESQL);
+            Connection connection = DriverManager.getConnection(url, id, password);
+            DatabaseMetaData databaseMetaData = connection.getMetaData();
+            String sqlKeywords = databaseMetaData.getSQLKeywords();
+
+            StringTokenizer stringTokenizer = new StringTokenizer(sqlKeywords, ",");
+            while(stringTokenizer.hasMoreElements()) {
+                keywordList.add(stringTokenizer.nextToken().trim());
+            }
+        } else {
+            throw new Exception("unknown db vendor");
+        }
+        return keywordList;
     }
 
     @Override

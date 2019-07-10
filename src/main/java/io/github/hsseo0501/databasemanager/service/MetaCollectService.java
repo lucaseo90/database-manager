@@ -14,7 +14,7 @@ public interface MetaCollectService {
 
     List<PrimaryKey> getPrimaryKeys(String vendor, String url, String id, String password, String tableName) throws Exception;
 
-    List<String> getSQLKeywords(Connection connection);
+    List<String> getSQLKeywords(String vendor, String url, String id, String password, String tableName) throws Exception;
 
     ResultSet getStoredProcedures(Connection connection, String catalog, String schemaPattern, String procedureNamePattern);
 
