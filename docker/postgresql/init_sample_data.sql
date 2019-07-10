@@ -1,6 +1,6 @@
 //TODO: Docker 컨테이너 생성시에 자동으로 생성해줄 수 있을지?
 CREATE TABLE test (
-  id SERIAL UNIQUE NOT NULL,
+  id SERIAL UNIQUE NOT NULL PRIMARY KEY,
   code VARCHAR(10) NOT NULL,
   article TEXT,
   name TEXT NOT NULL

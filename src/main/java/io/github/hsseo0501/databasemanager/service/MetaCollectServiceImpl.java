@@ -2,6 +2,7 @@ package io.github.hsseo0501.databasemanager.service;
 
 import io.github.hsseo0501.databasemanager.constant.Constants;
 import io.github.hsseo0501.databasemanager.model.Column;
+import io.github.hsseo0501.databasemanager.model.PrimaryKey;
 import org.springframework.stereotype.Service;
 
 import java.sql.*;
@@ -23,14 +24,14 @@ public class MetaCollectServiceImpl implements MetaCollectService {
 
             while (columns.next()) {
                 Column column = new Column();
-                column.setCatalog(columns.getString(Constants.Database.COLUMN_META_TABLE));
-                column.setSchema(columns.getString(Constants.Database.COLUMN_META_TABLE_SCHEMA));
-                column.setTableName(columns.getString(Constants.Database.COLUMN_META_TABLE_NAME));
-                column.setColumnName(columns.getString(Constants.Database.COLUMN_META_NAME));
-                column.setDataType(columns.getString(Constants.Database.COLUMN_META_DATA_TYPE));
-                column.setTypeName(columns.getString(Constants.Database.COLUMN_META_TYPE_NAME));
-                column.setColumnSize(columns.getString(Constants.Database.COLUMN_META_SIZE));
-                int nullable = columns.getInt(Constants.Database.COLUMN_META_NULLABLE);
+                column.setCatalog(columns.getString(Constants.Database.META_TABLE));
+                column.setSchema(columns.getString(Constants.Database.META_TABLE_SCHEMA));
+                column.setTableName(columns.getString(Constants.Database.META_TABLE_NAME));
+                column.setColumnName(columns.getString(Constants.Database.META_NAME));
+                column.setDataType(columns.getString(Constants.Database.META_DATA_TYPE));
+                column.setTypeName(columns.getString(Constants.Database.META_TYPE_NAME));
+                column.setColumnSize(columns.getString(Constants.Database.META_SIZE));
+                int nullable = columns.getInt(Constants.Database.META_NULLABLE);
                 if (nullable == DatabaseMetaData.columnNullable) {
                     column.setNullable("true");
                 } else if (nullable == DatabaseMetaData.columnNoNulls) {
@@ -38,8 +39,8 @@ public class MetaCollectServiceImpl implements MetaCollectService {
                 } else {
                     column.setNullable("unknown");
                 }
-                column.setIsNullable(columns.getString(Constants.Database.COLUMN_META_IS_NULLABLE));
-                column.setOrdinalPosition(columns.getString(Constants.Database.COLUMN_META_ORDINAL_POSITION));
+                column.setIsNullable(columns.getString(Constants.Database.META_IS_NULLABLE));
+                column.setOrdinalPosition(columns.getString(Constants.Database.META_ORDINAL_POSITION));
                 columnList.add(column);
             }
         } else {
@@ -49,8 +50,28 @@ public class MetaCollectServiceImpl implements MetaCollectService {
     }
 
     @Override
-    public ResultSet getPrimaryKeys(Connection connection, String tableName) {
-        return null;
+    public List<PrimaryKey> getPrimaryKeys(String vendor, String url, String id, String password, String tableName) throws Exception{
+        List<PrimaryKey> keyList = new LinkedList<>();
+        if (vendor.equalsIgnoreCase(Constants.Database.DB_VENDOR_POSTGRESQL)) {
+            Class.forName(Constants.Database.JDBC_DRIVER_POSTGRESQL);
+            Connection connection = DriverManager.getConnection(url, id, password);
+            DatabaseMetaData databaseMetaData = connection.getMetaData();
+            ResultSet primaryKeys = databaseMetaData.getPrimaryKeys(null, null, tableName);
+
+            while (primaryKeys.next()) {
+                PrimaryKey primaryKey = new PrimaryKey();
+                primaryKey.setCatalog(primaryKeys.getString(Constants.Database.META_TABLE));
+                primaryKey.setSchema(primaryKeys.getString(Constants.Database.META_TABLE_SCHEMA));
+                primaryKey.setTableName(primaryKeys.getString(Constants.Database.META_TABLE_NAME));
+                primaryKey.setColumnName(primaryKeys.getString(Constants.Database.META_NAME));
+                primaryKey.setKeySequence(primaryKeys.getShort(Constants.Database.META_KEY_SEQUENCE));
+                primaryKey.setKeyName(primaryKeys.getString(Constants.Database.META_KEY_NAME));
+                keyList.add(primaryKey);
+            }
+        } else {
+            throw new Exception("unknown db vendor");
+        }
+        return keyList;
     }
 
     @Override
