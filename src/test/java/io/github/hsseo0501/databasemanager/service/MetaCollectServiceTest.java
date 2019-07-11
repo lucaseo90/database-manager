@@ -33,48 +33,32 @@ public class MetaCollectServiceTest {
     @Autowired
     private MetaCollectService metaCollectService;
 
+    private static final String vendor = Constants.Database.DB_VENDOR_POSTGRESQL;
+    private static final String id = "test";
+    private static final String password = "pwd";
+    private static final String url = "jdbc:postgresql://localhost:15432/test_db";
+    private static final String tableName = "test";
+
     @Test
     public void getColumnsTest() throws Exception {
-        String vendor = Constants.Database.DB_VENDOR_POSTGRESQL;
-        String id = "test";
-        String password = "pwd";
-        String url = "jdbc:postgresql://localhost:15432/test_db";
-        String tableName = "test";
-
         List<Column> columnList = metaCollectService.getColumns(vendor, url, id, password, tableName);
         Assert.assertEquals(testDatabaseColumnMeta, objectMapper.writeValueAsString(columnList));
     }
 
     @Test
     public void getPrimaryKeyTest() throws Exception {
-        String vendor = Constants.Database.DB_VENDOR_POSTGRESQL;
-        String id = "test";
-        String password = "pwd";
-        String url = "jdbc:postgresql://localhost:15432/test_db";
-        String tableName = "test";
-
         List<PrimaryKey> keyList = metaCollectService.getPrimaryKeys(vendor, url, id, password, tableName);
         Assert.assertEquals(testDatabasePrimaryKeyMeta, objectMapper.writeValueAsString(keyList));
     }
 
     @Test
     public void getSQLKeywordTest() throws Exception {
-        String vendor = Constants.Database.DB_VENDOR_POSTGRESQL;
-        String id = "test";
-        String password = "pwd";
-        String url = "jdbc:postgresql://localhost:15432/test_db";
-        String tableName = "test";
-
         List<String> SQLKeywords = metaCollectService.getSQLKeywords(vendor, url, id, password, tableName);
         Assert.assertEquals(testDatabaseSQLKeywordMeta, objectMapper.writeValueAsString(SQLKeywords));
     }
 
     @Test
     public void getStoredProceduresTest() throws Exception {
-        String vendor = Constants.Database.DB_VENDOR_POSTGRESQL;
-        String id = "test";
-        String password = "pwd";
-        String url = "jdbc:postgresql://localhost:15432/test_db";
         String catalog = "catalog";
         String schemaPattern = "%";
         String procedureNamePattern = "%";
@@ -85,44 +69,24 @@ public class MetaCollectServiceTest {
 
     @Test
     public void getTableNamesTest() throws Exception {
-        String vendor = Constants.Database.DB_VENDOR_POSTGRESQL;
-        String id = "test";
-        String password = "pwd";
-        String url = "jdbc:postgresql://localhost:15432/test_db";
-
         List<String> tableList = metaCollectService.getTableNames(vendor, url, id, password);
         Assert.assertEquals(testDatabaseTableMeta, objectMapper.writeValueAsString(tableList));
     }
 
     @Test
     public void getTablesAndViewsTest() throws Exception {
-        String vendor = Constants.Database.DB_VENDOR_POSTGRESQL;
-        String id = "test";
-        String password = "pwd";
-        String url = "jdbc:postgresql://localhost:15432/test_db";
-
         Map<String, String> tableList = metaCollectService.getTablesAndViews(vendor, url, id, password);
         Assert.assertEquals(testDatabaseTableAndViewMeta, objectMapper.writeValueAsString(tableList));
     }
 
     @Test
     public void getTableTypesTest() throws Exception {
-        String vendor = Constants.Database.DB_VENDOR_POSTGRESQL;
-        String id = "test";
-        String password = "pwd";
-        String url = "jdbc:postgresql://localhost:15432/test_db";
-
         List<String> tableTypeList = metaCollectService.getTableTypes(vendor, url, id, password);
         Assert.assertEquals(testDatabaseTableTypeMeta, objectMapper.writeValueAsString(tableTypeList));
     }
 
     @Test
     public void getViewNamesTest() throws Exception {
-        String vendor = Constants.Database.DB_VENDOR_POSTGRESQL;
-        String id = "test";
-        String password = "pwd";
-        String url = "jdbc:postgresql://localhost:15432/test_db";
-
         List<String> viewNameList = metaCollectService.getViewNames(vendor, url, id, password);
         Assert.assertEquals(testDatabaseViewNameMeta, objectMapper.writeValueAsString(viewNameList));
     }

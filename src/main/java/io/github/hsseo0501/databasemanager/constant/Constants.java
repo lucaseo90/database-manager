@@ -10,25 +10,26 @@ public class Constants {
         public static final String META_TABLE_NAME = "TABLE_NAME";
         public static final String META_TABLE_TYPE = "TABLE_TYPE";
 
-        public static final String META_NAME = "COLUMN_NAME";
-        public static final String META_DATA_TYPE = "DATA_TYPE";
-        public static final String META_TYPE_NAME = "TYPE_NAME";
-        public static final String META_SIZE = "COLUMN_SIZE";
-        public static final String META_NULLABLE = "NULLABLE";
-        public static final String META_IS_NULLABLE = "IS_NULLABLE";
-        public static final String META_ORDINAL_POSITION = "ORDINAL_POSITION";
+        public static final String META_COLUMN_NAME = "COLUMN_NAME";
+        public static final String META_COLUMN_DATA_TYPE = "DATA_TYPE";
+        public static final String META_COLUMN_TYPE_NAME = "TYPE_NAME";
+        public static final String META_COLUMN_SIZE = "COLUMN_SIZE";
+        public static final String META_COLUMN_NULLABLE = "NULLABLE";
+        public static final String META_COLUMN_IS_NULLABLE = "IS_NULLABLE";
+        public static final String META_COLUMN_ORDINAL_POSITION = "ORDINAL_POSITION";
 
         public static final String META_KEY_SEQUENCE = "KEY_SEQ";
         public static final String META_KEY_NAME = "PK_NAME";
+
         public static final String META_PROCEDURE_NAME = "PROCEDURE_NAME";
         public static final String META_PROCEDURE_TYPE = "PROCEDURE_TYPE";
-
-        public static final String STORED_PROCEDURE_RETURNS_RESULT = "procedureReturnsResult";
-        public static final String STORED_PROCEDURE_NO_RESULT = "procedureNoResult";
-        public static final String STORED_PROCEDURE_RESULT_UNKNOWN = "procedureResultUnknown";
 
         public static final String[] META_TABLE_TYPES = {"TABLE"};
         public static final String[] META_VIEW_TYPES = {"VIEW"};
         public static final String[] META_TABLE_AND_VIEW_TYPES = {"TABLE", "VIEW"};
+
+        public static final String STORED_PROCEDURE_RETURNS_RESULT = "procedureReturnsResult";
+        public static final String STORED_PROCEDURE_NO_RESULT = "procedureNoResult";
+        public static final String STORED_PROCEDURE_RESULT_UNKNOWN = "procedureResultUnknown";
     }
 }
