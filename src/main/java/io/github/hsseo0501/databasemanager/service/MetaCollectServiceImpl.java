@@ -3,13 +3,15 @@ package io.github.hsseo0501.databasemanager.service;
 import io.github.hsseo0501.databasemanager.constant.Constants;
 import io.github.hsseo0501.databasemanager.model.Column;
 import io.github.hsseo0501.databasemanager.model.PrimaryKey;
+import io.github.hsseo0501.databasemanager.model.Procedure;
+import io.github.hsseo0501.databasemanager.util.DatabaseUtil;
 import org.springframework.stereotype.Service;
 
-import java.sql.*;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.StringTokenizer;
+import java.sql.Connection;
+import java.sql.DatabaseMetaData;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.util.*;
 
 @Service
 public class MetaCollectServiceImpl implements MetaCollectService {
@@ -51,7 +53,7 @@ public class MetaCollectServiceImpl implements MetaCollectService {
     }
 
     @Override
-    public List<PrimaryKey> getPrimaryKeys(String vendor, String url, String id, String password, String tableName) throws Exception{
+    public List<PrimaryKey> getPrimaryKeys(String vendor, String url, String id, String password, String tableName) throws Exception {
         List<PrimaryKey> keyList = new LinkedList<>();
         if (vendor.equalsIgnoreCase(Constants.Database.DB_VENDOR_POSTGRESQL)) {
             Class.forName(Constants.Database.JDBC_DRIVER_POSTGRESQL);
@@ -85,7 +87,7 @@ public class MetaCollectServiceImpl implements MetaCollectService {
             String sqlKeywords = databaseMetaData.getSQLKeywords();
 
             StringTokenizer stringTokenizer = new StringTokenizer(sqlKeywords, ",");
-            while(stringTokenizer.hasMoreElements()) {
+            while (stringTokenizer.hasMoreElements()) {
                 keywordList.add(stringTokenizer.nextToken().trim());
             }
         } else {
@@ -95,27 +97,112 @@ public class MetaCollectServiceImpl implements MetaCollectService {
     }
 
     @Override
-    public ResultSet getStoredProcedures(Connection connection, String catalog, String schemaPattern, String procedureNamePattern) {
-        return null;
+    public List<Procedure> getStoredProcedures(String vendor, String url, String id, String password, String catalog
+            , String schemaPattern, String procedureNamePattern) throws Exception {
+        List<Procedure> procedureList = new LinkedList<>();
+        if (vendor.equalsIgnoreCase(Constants.Database.DB_VENDOR_POSTGRESQL)) {
+            Class.forName(Constants.Database.JDBC_DRIVER_POSTGRESQL);
+            Connection connection = DriverManager.getConnection(url, id, password);
+            DatabaseMetaData databaseMetaData = connection.getMetaData();
+            ResultSet storedProcedures = databaseMetaData.getProcedures(catalog, schemaPattern, procedureNamePattern);
+
+            while (storedProcedures.next()) {
+                Procedure procedure = new Procedure();
+                procedure.setProcedureName(storedProcedures.getString(Constants.Database.META_PROCEDURE_NAME));
+                int storedProcedureType = storedProcedures.getInt(Constants.Database.META_PROCEDURE_TYPE);
+                procedure.setProcedureType(getStoredProcedureType(storedProcedureType));
+                procedureList.add(procedure);
+            }
+        } else {
+            throw new Exception("unknown db vendor");
+        }
+        return procedureList;
+    }
+
+    private String getStoredProcedureType(int storedProcedureType) {
+        if (storedProcedureType == DatabaseMetaData.procedureReturnsResult) {
+            return Constants.Database.STORED_PROCEDURE_RETURNS_RESULT;
+        } else if (storedProcedureType == DatabaseMetaData.procedureNoResult) {
+            return Constants.Database.STORED_PROCEDURE_NO_RESULT;
+        } else {
+            return Constants.Database.STORED_PROCEDURE_RESULT_UNKNOWN;
+        }
     }
 
     @Override
-    public List<String> getTableNames(Connection connection) {
-        return null;
+    public List<String> getTableNames(String vendor, String url, String id, String password) throws Exception {
+        List<String> tableList = new LinkedList<>();
+        if (vendor.equalsIgnoreCase(Constants.Database.DB_VENDOR_POSTGRESQL)) {
+            Class.forName(Constants.Database.JDBC_DRIVER_POSTGRESQL);
+            Connection connection = DriverManager.getConnection(url, id, password);
+            DatabaseMetaData databaseMetaData = connection.getMetaData();
+            ResultSet tables = databaseMetaData.getTables(null, null, null, Constants.Database.META_TABLE_TYPES);
+
+            while (tables.next()) {
+                String tableName = DatabaseUtil.getTrimmedString(tables, Constants.Database.META_TABLE_NAME);
+                tableList.add(tableName);
+            }
+        } else {
+            throw new Exception("unknown db vendor");
+        }
+        return tableList;
     }
 
     @Override
-    public Map<String, String> getTablesAndViews(Connection connection) {
-        return null;
+    public Map<String, String> getTablesAndViews(String vendor, String url, String id, String password) throws Exception {
+        Map<String, String> tableList = new HashMap<>();
+        if (vendor.equalsIgnoreCase(Constants.Database.DB_VENDOR_POSTGRESQL)) {
+            Class.forName(Constants.Database.JDBC_DRIVER_POSTGRESQL);
+            Connection connection = DriverManager.getConnection(url, id, password);
+            DatabaseMetaData databaseMetaData = connection.getMetaData();
+            ResultSet tables = databaseMetaData.getTables(null, null, null, Constants.Database.META_TABLE_AND_VIEW_TYPES);
+
+            while (tables.next()) {
+                String name = DatabaseUtil.getTrimmedString(tables, Constants.Database.META_TABLE_NAME);
+                String type = DatabaseUtil.getTrimmedString(tables, Constants.Database.META_TABLE_TYPE);
+                tableList.put(name, type);
+            }
+        } else {
+            throw new Exception("unknown db vendor");
+        }
+        return tableList;
     }
 
     @Override
-    public List<String> getTableTypes(Connection connection) {
-        return null;
+    public List<String> getTableTypes(String vendor, String url, String id, String password) throws Exception {
+        List<String> tableTypeList = new LinkedList<>();
+        if (vendor.equalsIgnoreCase(Constants.Database.DB_VENDOR_POSTGRESQL)) {
+            Class.forName(Constants.Database.JDBC_DRIVER_POSTGRESQL);
+            Connection connection = DriverManager.getConnection(url, id, password);
+            DatabaseMetaData databaseMetaData = connection.getMetaData();
+            ResultSet tableTypes = databaseMetaData.getTableTypes();
+
+            while (tableTypes.next()) {
+                String tableType = tableTypes.getString(1);
+                tableTypeList.add(tableType);
+            }
+        } else {
+            throw new Exception("unknown db vendor");
+        }
+        return tableTypeList;
     }
 
     @Override
-    public List<String> getViewNames(Connection connection) {
-        return null;
+    public List<String> getViewNames(String vendor, String url, String id, String password) throws Exception {
+        List<String> viewNameList = new LinkedList<>();
+        if (vendor.equalsIgnoreCase(Constants.Database.DB_VENDOR_POSTGRESQL)) {
+            Class.forName(Constants.Database.JDBC_DRIVER_POSTGRESQL);
+            Connection connection = DriverManager.getConnection(url, id, password);
+            DatabaseMetaData databaseMetaData = connection.getMetaData();
+            ResultSet views = databaseMetaData.getTables(null, null, null, Constants.Database.META_VIEW_TYPES);
+
+            while (views.next()) {
+                String viewName = DatabaseUtil.getTrimmedString(views, Constants.Database.META_TABLE_NAME);
+                viewNameList.add(viewName);
+            }
+        } else {
+            throw new Exception("unknown db vendor");
+        }
+        return viewNameList;
     }
 }
