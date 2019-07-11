@@ -164,6 +164,52 @@ public class MetaCollectServiceImpl implements MetaCollectService {
         return tableTypeList;
     }
 
+
+    @Override
+    public ResultSet getBestRowIdentifier(String vendor, String url, String id, String password, String catalog, String schema, String table, String scope, String nullable) throws Exception {
+        return null;
+    }
+
+    @Override
+    public List<String> getCatalogs(String vendor, String url, String id, String password) throws Exception {
+        return null;
+    }
+
+    @Override
+    public ResultSet getColumnPrivileges(String vendor, String url, String id, String password, String catalog, String schema, String table, String columnNamePattern) throws Exception {
+        return null;
+    }
+
+    @Override
+    public ResultSet getForeignKeys(String vendor, String url, String id, String password, String catalog, String schema, String table) {
+        return null;
+    }
+
+    @Override
+    public String getRowSetMetaData(String vendor, String url, String id, String password, String sqlQuery) throws Exception {
+        return null;
+    }
+
+    @Override
+    public List<String> getSchemas(String vendor, String url, String id, String password) throws Exception {
+        return null;
+    }
+
+    @Override
+    public ResultSet getStoredProcedureColumns(String vendor, String url, String id, String password, String catalog, String schemaPattern, String procedureNamePattern) throws Exception {
+        return null;
+    }
+
+    @Override
+    public ResultSet getTablePrivileges(String vendor, String url, String id, String password, String catalog, String schemaPattern, String tableNamePattern) {
+        return null;
+    }
+
+    @Override
+    public ResultSet getTypes(String vendor, String url, String id, String password) throws Exception {
+        return null;
+    }
+
     private DatabaseMetaData getDatabaseMetaData(String vendor, String url, String id, String password) throws Exception {
         DatabaseMetaData databaseMetaData;
         if (vendor.equalsIgnoreCase(Constants.Database.DB_VENDOR_POSTGRESQL)) {
