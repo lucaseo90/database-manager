@@ -14,3 +14,7 @@ select
     md5(random()::text),
     md5(random()::text)
 from generate_series(1, 100) s(i)
+
+CREATE VIEW test_view AS
+    select code, article, name
+    from test;
