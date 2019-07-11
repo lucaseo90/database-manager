@@ -122,28 +122,19 @@ public class MetaCollectServiceImpl implements MetaCollectService {
     }
 
     @Override
-    public List<String> getTableNames(String vendor, String url, String id, String password) throws Exception {
-        List<String> tableList = new LinkedList<>();
-        DatabaseMetaData databaseMetaData = getDatabaseMetaData(vendor, url, id, password);
-        if (vendor.equalsIgnoreCase(Constants.Database.DB_VENDOR_POSTGRESQL)) {
-            ResultSet tables = databaseMetaData.getTables(null, null, null, Constants.Database.META_TABLE_TYPES);
-
-            while (tables.next()) {
-                String tableName = DatabaseUtil.getTrimmedString(tables, Constants.Database.META_TABLE_NAME);
-                tableList.add(tableName);
-            }
-        } else {
-            throw new Exception("unknown db vendor");
-        }
-        return tableList;
-    }
-
-    @Override
-    public Map<String, String> getTablesAndViews(String vendor, String url, String id, String password) throws Exception {
+    public Map<String, String> getTablesAndViews(String vendor, String url, String id, String password
+            , Boolean isTable, Boolean isView) throws Exception {
         Map<String, String> tableList = new HashMap<>();
         DatabaseMetaData databaseMetaData = getDatabaseMetaData(vendor, url, id, password);
         if (vendor.equalsIgnoreCase(Constants.Database.DB_VENDOR_POSTGRESQL)) {
-            ResultSet tables = databaseMetaData.getTables(null, null, null, Constants.Database.META_TABLE_AND_VIEW_TYPES);
+            ResultSet tables = null;
+            if (isTable && isView) {
+                tables = databaseMetaData.getTables(null, null, null, Constants.Database.META_TABLE_AND_VIEW_TYPES);
+            } else if (isTable && !isView) {
+                tables = databaseMetaData.getTables(null, null, null, Constants.Database.META_TABLE_TYPES);
+            } else if (!isTable && isView) {
+                tables = databaseMetaData.getTables(null, null, null, Constants.Database.META_VIEW_TYPES);
+            }
 
             while (tables.next()) {
                 String name = DatabaseUtil.getTrimmedString(tables, Constants.Database.META_TABLE_NAME);
@@ -171,22 +162,6 @@ public class MetaCollectServiceImpl implements MetaCollectService {
             throw new Exception("unknown db vendor");
         }
         return tableTypeList;
-    }
-
-    @Override
-    public List<String> getViewNames(String vendor, String url, String id, String password) throws Exception {
-        List<String> viewNameList = new LinkedList<>();
-        DatabaseMetaData databaseMetaData = getDatabaseMetaData(vendor, url, id, password);
-        if (vendor.equalsIgnoreCase(Constants.Database.DB_VENDOR_POSTGRESQL)) {
-            ResultSet views = databaseMetaData.getTables(null, null, null, Constants.Database.META_VIEW_TYPES);
-            while (views.next()) {
-                String viewName = DatabaseUtil.getTrimmedString(views, Constants.Database.META_TABLE_NAME);
-                viewNameList.add(viewName);
-            }
-        } else {
-            throw new Exception("unknown db vendor");
-        }
-        return viewNameList;
     }
 
     private DatabaseMetaData getDatabaseMetaData(String vendor, String url, String id, String password) throws Exception {

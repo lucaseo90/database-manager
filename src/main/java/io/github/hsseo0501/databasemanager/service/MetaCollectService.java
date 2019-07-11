@@ -18,12 +18,9 @@ public interface MetaCollectService {
     List<Procedure> getStoredProcedures(String vendor, String url, String id, String password
             , String catalog, String schemaPattern, String procedureNamePattern) throws Exception;
 
-    List<String> getTableNames(String vendor, String url, String id, String password) throws Exception;
-
-    Map<String, String> getTablesAndViews(String vendor, String url, String id, String password) throws Exception;
+    Map<String, String> getTablesAndViews(String vendor, String url, String id, String password
+            , Boolean isTable, Boolean isView) throws Exception;
 
     List<String> getTableTypes(String vendor, String url, String id, String password) throws Exception;
-
-    List<String> getViewNames(String vendor, String url, String id, String password) throws Exception;
 
 }
