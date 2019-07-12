@@ -17,12 +17,16 @@ public class Column {
 
     String typeName;
 
-    String columnSize;
+    Integer columnSize;
 
     String nullable;
 
     String isNullable;
 
     String ordinalPosition;
+
+    Short decimalDigits;
+
+    String pseudoColumn;
 
 }

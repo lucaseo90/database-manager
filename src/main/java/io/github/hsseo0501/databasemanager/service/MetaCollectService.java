@@ -24,7 +24,7 @@ public interface MetaCollectService {
 
     List<String> getTableTypes(String vendor, String url, String id, String password) throws Exception;
 
-    ResultSet getBestRowIdentifier(String vendor, String url, String id, String password, String catalog, String schema, String table, String scope, String nullable) throws Exception;
+    List<Column> getBestRowIdentifier(String vendor, String url, String id, String password, String catalog, String schema, String table, Integer scope, Boolean nullable) throws Exception;
 
     List<String> getCatalogs(String vendor, String url, String id, String password) throws Exception;
 

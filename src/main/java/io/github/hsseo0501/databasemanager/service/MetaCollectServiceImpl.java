@@ -31,7 +31,7 @@ public class MetaCollectServiceImpl implements MetaCollectService {
                 column.setColumnName(columns.getString(Constants.Database.META_COLUMN_NAME));
                 column.setDataType(columns.getString(Constants.Database.META_COLUMN_DATA_TYPE));
                 column.setTypeName(columns.getString(Constants.Database.META_COLUMN_TYPE_NAME));
-                column.setColumnSize(columns.getString(Constants.Database.META_COLUMN_SIZE));
+                column.setColumnSize(columns.getInt(Constants.Database.META_COLUMN_SIZE));
                 int nullable = columns.getInt(Constants.Database.META_COLUMN_NULLABLE);
                 if (nullable == DatabaseMetaData.columnNullable) {
                     column.setNullable("true");
@@ -166,8 +166,60 @@ public class MetaCollectServiceImpl implements MetaCollectService {
 
 
     @Override
-    public ResultSet getBestRowIdentifier(String vendor, String url, String id, String password, String catalog, String schema, String table, String scope, String nullable) throws Exception {
-        return null;
+    public List<Column> getBestRowIdentifier(String vendor, String url, String id, String password, String catalog, String schema, String table, Integer scope, Boolean nullable) throws Exception {
+        List<Column> columnList = new LinkedList<>();
+        DatabaseMetaData databaseMetaData = getDatabaseMetaData(vendor, url, id, password);
+        int theScope = DatabaseMetaData.bestRowSession;
+        if (scope.equals("bestRowTemporary")) {
+            theScope = DatabaseMetaData.bestRowTemporary;
+        } else if (scope.equals("bestRowTransaction")) {
+            theScope = DatabaseMetaData.bestRowTransaction;
+        }
+        boolean isNullable = false;
+
+        if (nullable.equals("true")) {
+            isNullable = true;
+        }
+
+        ResultSet bestRowIdentifier = databaseMetaData.getBestRowIdentifier(catalog, schema, table.toUpperCase(),
+                theScope, isNullable);
+
+        while (bestRowIdentifier.next()) {
+            Column column = new Column();
+            column.setColumnName(bestRowIdentifier.getString(Constants.Database.META_COLUMN_NAME));
+            column.setDataType(bestRowIdentifier.getString(Constants.Database.META_COLUMN_DATA_TYPE));
+            column.setTypeName(bestRowIdentifier.getString(Constants.Database.META_COLUMN_TYPE_NAME));
+            column.setColumnSize(bestRowIdentifier.getInt(Constants.Database.META_COLUMN_SIZE));
+            column.setDecimalDigits(bestRowIdentifier.getShort(Constants.Database.META_COLUMN_DECIMAL_DIGITS));
+            short pseudoColumn = bestRowIdentifier.getShort(Constants.Database.META_COLUMN_PSEUDO_COLUMN);
+            column.setPseudoColumn(getPseudoColumn(pseudoColumn));
+            columnList.add(column);
+        }
+
+        return columnList;
+    }
+
+    private String getScope(short scope) {
+        if (scope == DatabaseMetaData.bestRowSession) {
+            return "bestRowSession";
+        } else if (scope == DatabaseMetaData.bestRowTemporary) {
+            return "bestRowTemporary";
+        } else if (scope == DatabaseMetaData.bestRowTransaction) {
+            return "bestRowTransaction";
+        } else {
+            return "scope is unknown";
+        }
+    }
+
+
+    public String getPseudoColumn(short pseudoColumn) {
+        if (pseudoColumn == DatabaseMetaData.bestRowNotPseudo) {
+            return "bestRowNotPseudo";
+        } else if (pseudoColumn == DatabaseMetaData.bestRowPseudo) {
+            return "bestRowPseudo";
+        } else {
+            return "bestRowUnknown";
+        }
     }
 
     @Override

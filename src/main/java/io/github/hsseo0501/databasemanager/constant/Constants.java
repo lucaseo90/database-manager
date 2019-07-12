@@ -17,6 +17,8 @@ public class Constants {
         public static final String META_COLUMN_NULLABLE = "NULLABLE";
         public static final String META_COLUMN_IS_NULLABLE = "IS_NULLABLE";
         public static final String META_COLUMN_ORDINAL_POSITION = "ORDINAL_POSITION";
+        public static final String META_COLUMN_DECIMAL_DIGITS = "DECIMAL_DIGITS";
+        public static final String META_COLUMN_PSEUDO_COLUMN = "PSEUDO_COLUMN";
 
         public static final String META_KEY_SEQUENCE = "KEY_SEQ";
         public static final String META_KEY_NAME = "PK_NAME";
