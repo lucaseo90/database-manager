@@ -224,11 +224,45 @@ public class MetaCollectServiceImpl implements MetaCollectService {
 
     @Override
     public List<String> getCatalogs(String vendor, String url, String id, String password) throws Exception {
-        return null;
+        List<String> catalogList = new LinkedList<>();
+        DatabaseMetaData databaseMetaData = getDatabaseMetaData(vendor, url, id, password);
+        ResultSet catalogs = databaseMetaData.getCatalogs();
+        if (vendor.equalsIgnoreCase(Constants.Database.DB_VENDOR_POSTGRESQL)) {
+            while (catalogs.next()) {
+                String catalog = catalogs.getString(1);
+                catalogList.add(catalog);
+            }
+        } else {
+            throw new Exception("unknown db vendor");
+        }
+        return catalogList;
     }
 
     @Override
-    public ResultSet getColumnPrivileges(String vendor, String url, String id, String password, String catalog, String schema, String table, String columnNamePattern) throws Exception {
+    public List<Column> getColumnPrivileges(String vendor, String url, String id, String password, String catalog, String schema, String table, String columnNamePattern) throws Exception {
+        List<Column> columnList = new LinkedList<>();
+        DatabaseMetaData databaseMetaData = getDatabaseMetaData(vendor, url, id, password);
+        ResultSet columnPrivileges = databaseMetaData.getColumnPrivileges(catalog, schema, table, columnNamePattern);
+        while(columnPrivileges.next()) {
+            Column column = new Column();
+            column.setCatalog(columnPrivileges.getString(Constants.Database.META_TABLE));
+            column.setSchema(columnPrivileges.getString(Constants.Database.META_TABLE_SCHEMA));
+            column.setTableName(columnPrivileges.getString(Constants.Database.META_TABLE_NAME));
+            column.setColumnName(columnPrivileges.getString(Constants.Database.META_COLUMN_NAME));
+
+            column.setGrantor(columnPrivileges.getString(Constants.Database.META_COLUMN_GRANTOR));
+            column.setGrantee(columnPrivileges.getString(Constants.Database.META_COLUMN_GRANTEE));
+            column.setPrivilege(columnPrivileges.getString(Constants.Database.META_COLUMN_PRIVILEGE));
+            column.setIsGrantable(columnPrivileges.getString(Constants.Database.META_COLUMN_IS_GRANTABLE));
+
+            columnList.add(column);
+        }
+
+        return columnList;
+    }
+
+    @Override
+    public ResultSet getExportedKeys(String vendor, String url, String id, String password) throws Exception {
         return null;
     }
 

@@ -30,6 +30,7 @@ public class MetaCollectServiceTest {
     private String testDatabaseTableTypeMeta = "[\"FOREIGN TABLE\",\"INDEX\",\"MATERIALIZED VIEW\",\"SEQUENCE\",\"SYSTEM INDEX\",\"SYSTEM TABLE\",\"SYSTEM TOAST INDEX\",\"SYSTEM TOAST TABLE\",\"SYSTEM VIEW\",\"TABLE\",\"TEMPORARY INDEX\",\"TEMPORARY SEQUENCE\",\"TEMPORARY TABLE\",\"TEMPORARY VIEW\",\"TYPE\",\"VIEW\"]";
     private String testDatabaseViewMeta = "{\"test_view\":\"VIEW\"}";
     private String testDatabaseBestRowIdentifierTest = "[]";
+    private String catalogTestResult = "[\"test_db\"]";
 
     @Autowired
     private ObjectMapper objectMapper;
@@ -100,5 +101,18 @@ public class MetaCollectServiceTest {
         Connection connection = DriverManager.getConnection(url, id, password);
         List<Column> columnList = metaCollectService.getBestRowIdentifier(vendor, url, id, password, connection.getCatalog(), "", "test", DatabaseMetaData.bestRowTemporary, false);
         Assert.assertEquals(testDatabaseBestRowIdentifierTest, objectMapper.writeValueAsString(columnList));
+    }
+
+    @Test
+    public void getCatalogsTest() throws Exception {
+        List<String> catalogList = metaCollectService.getCatalogs(vendor, url, id, password);
+        Assert.assertEquals(catalogTestResult, objectMapper.writeValueAsString(catalogList));
+    }
+
+    @Test
+    public void getColumnPrivilegesTest() throws Exception {
+        Connection connection = DriverManager.getConnection(url, id, password);
+        List<Column> columnList = metaCollectService.getColumnPrivileges(vendor, url, id, password, connection.getCatalog(), null, "test", "%");
+        Assert.assertNotNull(objectMapper.writeValueAsString(columnList));
     }
 }

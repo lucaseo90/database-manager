@@ -29,4 +29,12 @@ public class Column {
 
     String pseudoColumn;
 
+    String grantor;
+
+    String grantee;
+
+    String privilege;
+
+    String isGrantable;
+
 }

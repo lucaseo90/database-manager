@@ -20,6 +20,11 @@ public class Constants {
         public static final String META_COLUMN_DECIMAL_DIGITS = "DECIMAL_DIGITS";
         public static final String META_COLUMN_PSEUDO_COLUMN = "PSEUDO_COLUMN";
 
+        public static final String META_COLUMN_GRANTOR = "GRANTOR";
+        public static final String META_COLUMN_GRANTEE = "GRANTEE";
+        public static final String META_COLUMN_PRIVILEGE = "PRIVILEGE";
+        public static final String META_COLUMN_IS_GRANTABLE = "IS_GRANTABLE";
+
         public static final String META_KEY_SEQUENCE = "KEY_SEQ";
         public static final String META_KEY_NAME = "PK_NAME";
 
