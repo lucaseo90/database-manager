@@ -1,0 +1,19 @@
+version: '3'
+
+services:
+  test-mysql-compose:
+    image: mysql:latest
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: "pwd"
+    ports:
+      - "13306:3306"
+    volumes:
+      - /Users/$USER/docker/mysql/data:/var/lib/mysql
+      - /Users/$USER/docker/mysql/config:/etc/mysql/conf.d
+    networks:
+      - mysql-compose-network
+
+networks:
+  mysql-compose-network:
+    driver: bridge
