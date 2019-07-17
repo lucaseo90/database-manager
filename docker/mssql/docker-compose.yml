@@ -1,0 +1,19 @@
+version: '3'
+
+services:
+  test-mssql-compose:
+    image: microsoft/mssql-server-linux:2017-latest
+    environment:
+      SA_PASSWORD: "pwd1q@W#E"
+      ACCEPT_EULA: Y
+    ports:
+      - "11433:1433"
+    volumes:
+      - ./.db:/var/opt/mssql/
+      - /var/opt/mssql/data
+    networks:
+      - mssql-compose-network
+
+networks:
+  mssql-compose-network:
+    driver: bridge
