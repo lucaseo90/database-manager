@@ -3,10 +3,10 @@ version: '3'
 services:
   test-oracle-compose:
     image: deepdiver/docker-oracle-xe-11g
-    environment:
-      ORACLE_MEM: 1000
     ports:
       - "11521:1521"
+    volumes:
+      - /Users/hsseo/docker/oracle/oradata:/opt/oracle/oradata
     networks:
       - oracle-compose-network
 
