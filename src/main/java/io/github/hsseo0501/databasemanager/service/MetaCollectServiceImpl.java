@@ -359,22 +359,87 @@ public class MetaCollectServiceImpl implements MetaCollectService {
 
     @Override
     public List<String> getSchemas(String vendor, String url, String id, String password) throws Exception {
-        return null;
+        List<String> schemaList = new LinkedList<>();
+        DatabaseMetaData databaseMetaData = getDatabaseMetaData(vendor, url, id, password);
+        ResultSet schemas = databaseMetaData.getSchemas();
+        while (schemas.next()) {
+            String schema = schemas.getString(1);
+            schemaList.add(schema);
+        }
+        return schemaList;
     }
 
     @Override
-    public ResultSet getStoredProcedureColumns(String vendor, String url, String id, String password, String catalog, String schemaPattern, String procedureNamePattern) throws Exception {
-        return null;
+    public List<Procedure> getStoredProcedureColumns(String vendor, String url, String id, String password, String catalog, String schemaPattern, String procedureNamePattern) throws Exception {
+        List<Procedure> procedureList = new LinkedList<>();
+        DatabaseMetaData databaseMetaData = getDatabaseMetaData(vendor, url, id, password);
+        ResultSet procedureColumns = databaseMetaData.getProcedureColumns(catalog, schemaPattern, procedureNamePattern, procedureNamePattern);
+        while (procedureColumns.next()) {
+            Procedure procedure = new Procedure();
+            procedure.setProcedureCatalog(procedureColumns.getString(Constants.Database.META_PROCEDURE_CATALOG));
+            procedure.setProcedureCatalog(procedureColumns.getString(Constants.Database.META_PROCEDURE_SCHEMA));
+            procedure.setProcedureCatalog(procedureColumns.getString(Constants.Database.META_PROCEDURE_NAME));
+            procedure.setProcedureCatalog(procedureColumns.getString(Constants.Database.META_COLUMN_NAME));
+            short columnType = procedureColumns.getShort(Constants.Database.META_COLUMN_TYPE);
+            procedure.setProcedureCatalog(getColumnType(columnType));
+            procedure.setProcedureCatalog(procedureColumns.getString(Constants.Database.META_COLUMN_TYPE_NAME));
+            procedure.setProcedureCatalog(procedureColumns.getString(Constants.Database.META_COLUMN_NULLABLE));
+            procedureList.add(procedure);
+        }
+        return procedureList;
+    }
+
+
+    private static String getColumnType(short columnType) {
+        if (columnType == DatabaseMetaData.procedureColumnIn) {
+            return "IN parameter";
+        } else if (columnType == DatabaseMetaData.procedureColumnInOut) {
+            return "INOUT parameter";
+        } else if (columnType == DatabaseMetaData.procedureColumnOut) {
+            return "OUT parameter";
+        } else if (columnType == DatabaseMetaData.procedureColumnReturn) {
+            return "procedure return value";
+        } else if (columnType == DatabaseMetaData.procedureColumnResult) {
+            return "result column in ResultSet";
+        } else {
+            return "nobody knows";
+        }
     }
 
     @Override
-    public ResultSet getTablePrivileges(String vendor, String url, String id, String password, String catalog, String schemaPattern, String tableNamePattern) {
-        return null;
+    public List<Column> getTablePrivileges(String vendor, String url, String id, String password, String catalog, String schemaPattern, String tableNamePattern) throws Exception {
+        List<Column> tableList = new LinkedList<>();
+        DatabaseMetaData databaseMetaData = getDatabaseMetaData(vendor, url, id, password);
+        ResultSet columnPrivileges = databaseMetaData.getTablePrivileges(catalog, schemaPattern, tableNamePattern);
+        while (columnPrivileges.next()) {
+            Column column = new Column();
+            column.setCatalog(columnPrivileges.getString(Constants.Database.META_TABLE));
+            column.setSchema(columnPrivileges.getString(Constants.Database.META_TABLE_SCHEMA));
+            column.setTableName(columnPrivileges.getString(Constants.Database.META_TABLE_NAME));
+
+            column.setGrantor(columnPrivileges.getString(Constants.Database.META_COLUMN_GRANTOR));
+            column.setGrantee(columnPrivileges.getString(Constants.Database.META_COLUMN_GRANTEE));
+            column.setPrivilege(columnPrivileges.getString(Constants.Database.META_COLUMN_PRIVILEGE));
+            column.setIsGrantable(columnPrivileges.getString(Constants.Database.META_COLUMN_IS_GRANTABLE));
+
+            tableList.add(column);
+        }
+
+        return tableList;
     }
 
     @Override
-    public ResultSet getTypes(String vendor, String url, String id, String password) throws Exception {
-        return null;
+    public List<Column> getTypes(String vendor, String url, String id, String password) throws Exception {
+        List<Column> typeList = new LinkedList<>();
+        DatabaseMetaData databaseMetaData = getDatabaseMetaData(vendor, url, id, password);
+        ResultSet typeInfo = databaseMetaData.getTypeInfo();
+        while (typeInfo.next()) {
+            Column column = new Column();
+            column.setCatalog(typeInfo.getString(Constants.Database.META_COLUMN_TYPE_NAME));
+            column.setSchema(typeInfo.getString(Constants.Database.META_COLUMN_DATA_TYPE));
+            typeList.add(column);
+        }
+        return typeList;
     }
 
     private DatabaseMetaData getDatabaseMetaData(String vendor, String url, String id, String password) throws Exception {

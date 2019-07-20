@@ -8,4 +8,17 @@ public class Procedure {
     String procedureName;
 
     String procedureType;
+
+    String procedureCatalog;
+
+    String procedureSchema;
+
+    String procedureColumnName;
+
+    String procedureColumnType;
+
+    String procedureTypeName;
+
+    String procedureNullable;
+
 }

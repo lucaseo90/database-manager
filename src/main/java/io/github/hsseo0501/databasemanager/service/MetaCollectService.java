@@ -35,14 +35,15 @@ public interface MetaCollectService {
 
     List<ExportedKey> getForeignKeys(String vendor, String url, String id, String password, String catalog, String schema, String tableName) throws Exception;
 
+    @Deprecated
     String getRowSetMetaData(String vendor, String url, String id, String password, String sqlQuery) throws Exception;
 
     List<String> getSchemas(String vendor, String url, String id, String password) throws Exception;
 
-    ResultSet getStoredProcedureColumns(String vendor, String url, String id, String password, String catalog, String schemaPattern, String procedureNamePattern) throws Exception;
+    List<Procedure> getStoredProcedureColumns(String vendor, String url, String id, String password, String catalog, String schemaPattern, String procedureNamePattern) throws Exception;
 
-    ResultSet getTablePrivileges(String vendor, String url, String id, String password, String catalog, String schemaPattern, String tableNamePattern);
+    List<Column> getTablePrivileges(String vendor, String url, String id, String password, String catalog, String schemaPattern, String tableNamePattern) throws Exception;
 
-    ResultSet getTypes(String vendor, String url, String id, String password) throws Exception;
+    List<Column> getTypes(String vendor, String url, String id, String password) throws Exception;
 
 }

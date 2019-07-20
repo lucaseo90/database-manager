@@ -11,6 +11,7 @@ public class Constants {
         public static final String META_TABLE_TYPE = "TABLE_TYPE";
 
         public static final String META_COLUMN_NAME = "COLUMN_NAME";
+        public static final String META_COLUMN_TYPE = "COLUMN_TYPE";
         public static final String META_COLUMN_DATA_TYPE = "DATA_TYPE";
         public static final String META_COLUMN_TYPE_NAME = "TYPE_NAME";
         public static final String META_COLUMN_SIZE = "COLUMN_SIZE";
@@ -43,6 +44,8 @@ public class Constants {
 
         public static final String META_PROCEDURE_NAME = "PROCEDURE_NAME";
         public static final String META_PROCEDURE_TYPE = "PROCEDURE_TYPE";
+        public static final String META_PROCEDURE_CATALOG = "PROCEDURE_CAT";
+        public static final String META_PROCEDURE_SCHEMA = "PROCEDURE_SCHEM";
 
         public static final String[] META_TABLE_TYPES = {"TABLE"};
         public static final String[] META_VIEW_TYPES = {"VIEW"};
