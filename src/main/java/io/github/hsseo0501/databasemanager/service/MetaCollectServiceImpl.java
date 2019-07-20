@@ -2,6 +2,7 @@ package io.github.hsseo0501.databasemanager.service;
 
 import io.github.hsseo0501.databasemanager.constant.Constants;
 import io.github.hsseo0501.databasemanager.model.Column;
+import io.github.hsseo0501.databasemanager.model.ExportedKey;
 import io.github.hsseo0501.databasemanager.model.PrimaryKey;
 import io.github.hsseo0501.databasemanager.model.Procedure;
 import io.github.hsseo0501.databasemanager.util.DatabaseUtil;
@@ -64,7 +65,7 @@ public class MetaCollectServiceImpl implements MetaCollectService {
                 primaryKey.setTableName(primaryKeys.getString(Constants.Database.META_TABLE_NAME));
                 primaryKey.setColumnName(primaryKeys.getString(Constants.Database.META_COLUMN_NAME));
                 primaryKey.setKeySequence(primaryKeys.getShort(Constants.Database.META_KEY_SEQUENCE));
-                primaryKey.setKeyName(primaryKeys.getString(Constants.Database.META_KEY_NAME));
+                primaryKey.setKeyName(primaryKeys.getString(Constants.Database.META_KEY_SEQUENCE));
                 keyList.add(primaryKey);
             }
         } else {
@@ -243,7 +244,7 @@ public class MetaCollectServiceImpl implements MetaCollectService {
         List<Column> columnList = new LinkedList<>();
         DatabaseMetaData databaseMetaData = getDatabaseMetaData(vendor, url, id, password);
         ResultSet columnPrivileges = databaseMetaData.getColumnPrivileges(catalog, schema, table, columnNamePattern);
-        while(columnPrivileges.next()) {
+        while (columnPrivileges.next()) {
             Column column = new Column();
             column.setCatalog(columnPrivileges.getString(Constants.Database.META_TABLE));
             column.setSchema(columnPrivileges.getString(Constants.Database.META_TABLE_SCHEMA));
@@ -262,8 +263,91 @@ public class MetaCollectServiceImpl implements MetaCollectService {
     }
 
     @Override
-    public ResultSet getExportedKeys(String vendor, String url, String id, String password) throws Exception {
-        return null;
+    public List<ExportedKey> getExportedKeys(String vendor, String url, String id, String password, String catalog, String schema, String tableName) throws Exception {
+        List<ExportedKey> exportedKeyList = new LinkedList<>();
+        DatabaseMetaData databaseMetaData = getDatabaseMetaData(vendor, url, id, password);
+        ResultSet exportedKeys = databaseMetaData.getExportedKeys(catalog, schema, tableName);
+        while (exportedKeys.next()) {
+            ExportedKey exportedKey = new ExportedKey();
+            exportedKey.setPkName(exportedKeys.getString(Constants.Database.META_PK_NAME));
+            exportedKey.setPkTableCatalog(exportedKeys.getString(Constants.Database.META_PK_CATALOG));
+            exportedKey.setPkTableSchema(exportedKeys.getString(Constants.Database.META_PK_SCHEMA));
+            exportedKey.setPkTableName(exportedKeys.getString(Constants.Database.META_PK_TABLE_NAME));
+            exportedKey.setPkColumnName(exportedKeys.getString(Constants.Database.META_PK_COLUMN_NAME));
+
+            exportedKey.setFkName(exportedKeys.getString(Constants.Database.META_FK_NAME));
+            exportedKey.setFkTableCatalog(exportedKeys.getString(Constants.Database.META_FK_CATALOG));
+            exportedKey.setFkTableSchema(exportedKeys.getString(Constants.Database.META_FK_SCHEMA));
+            exportedKey.setFkTableName(exportedKeys.getString(Constants.Database.META_FK_TABLE_NAME));
+            exportedKey.setFkColumnName(exportedKeys.getString(Constants.Database.META_FK_COLUMN_NAME));
+
+            exportedKey.setKeySequence(exportedKeys.getString(Constants.Database.META_KEY_SEQUENCE));
+            short updateRule = exportedKeys.getShort(Constants.Database.META_KEY_UPDATE_RULE);
+            exportedKey.setUpdateRule(getUpdateRule(updateRule));
+            short deleteRule = exportedKeys.getShort(Constants.Database.META_KEY_DELETE_RULE);
+            exportedKey.setDeleteRule(getDeleteRule(deleteRule));
+            short deferrability = exportedKeys.getShort(Constants.Database.META_KEY_DEFERRABILITY);
+            exportedKey.setDeferrability(getDeferrability(deferrability));
+            exportedKeyList.add(exportedKey);
+        }
+        return exportedKeyList;
+    }
+
+    private static String getUpdateRule(short updateRule) {
+        if (updateRule == DatabaseMetaData.importedKeyNoAction) {
+            return "importedKeyNoAction";
+        }
+        else if (updateRule == DatabaseMetaData.importedKeyCascade) {
+            return "importedKeyCascade";
+        }
+        else if (updateRule == DatabaseMetaData.importedKeySetNull) {
+            return "importedKeySetNull";
+        }
+        else if (updateRule == DatabaseMetaData.importedKeySetDefault) {
+            return "importedKeySetDefault";
+        }
+        else if (updateRule == DatabaseMetaData.importedKeyRestrict) {
+            return "importedKeyRestrict";
+        }
+        else {
+            return "nobody knows";
+        }
+    }
+
+    private static String getDeleteRule(short deleteRule) {
+        if (deleteRule == DatabaseMetaData.importedKeyNoAction) {
+            return "importedKeyNoAction";
+        }
+        else if (deleteRule == DatabaseMetaData.importedKeyCascade) {
+            return "importedKeyCascade";
+        }
+        else if (deleteRule == DatabaseMetaData.importedKeySetNull) {
+            return "importedKeySetNull";
+        }
+        else if (deleteRule == DatabaseMetaData.importedKeyRestrict) {
+            return "importedKeyRestrict";
+        }
+        else if (deleteRule == DatabaseMetaData.importedKeySetDefault) {
+            return "importedKeySetDefault";
+        }
+        else {
+            return "nobody knows";
+        }
+    }
+
+    private static String getDeferrability(short deferrability) {
+        if (deferrability == DatabaseMetaData.importedKeyInitiallyDeferred) {
+            return "importedKeyInitiallyDeferred";
+        }
+        else if (deferrability == DatabaseMetaData.importedKeyInitiallyImmediate) {
+            return "importedKeyInitiallyImmediate";
+        }
+        else if (deferrability == DatabaseMetaData.importedKeyNotDeferrable) {
+            return "importedKeyNotDeferrable";
+        }
+        else {
+            return "nobody knows";
+        }
     }
 
     @Override

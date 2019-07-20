@@ -26,7 +26,20 @@ public class Constants {
         public static final String META_COLUMN_IS_GRANTABLE = "IS_GRANTABLE";
 
         public static final String META_KEY_SEQUENCE = "KEY_SEQ";
-        public static final String META_KEY_NAME = "PK_NAME";
+        public static final String META_KEY_UPDATE_RULE = "UPDATE_RULE";
+        public static final String META_KEY_DELETE_RULE = "DELETE_RULE";
+        public static final String META_KEY_DEFERRABILITY = "DEFERRABILITY";
+
+        public static final String META_PK_CATALOG = "PKTABLE_CAT";
+        public static final String META_PK_SCHEMA = "PKTABLE_SCHEM";
+        public static final String META_PK_TABLE_NAME = "PKTABLE_NAME";
+        public static final String META_PK_COLUMN_NAME = "PKCOLUMN_NAME";
+        public static final String META_FK_CATALOG = "FKTABLE_CAT";
+        public static final String META_FK_SCHEMA = "FKTABLE_SCHEM";
+        public static final String META_FK_TABLE_NAME = "FKTABLE_NAME";
+        public static final String META_FK_COLUMN_NAME = "FKCOLUMN_NAME";
+        public static final String META_PK_NAME = "PK_NAME";
+        public static final String META_FK_NAME = "FK_NAME";
 
         public static final String META_PROCEDURE_NAME = "PROCEDURE_NAME";
         public static final String META_PROCEDURE_TYPE = "PROCEDURE_TYPE";

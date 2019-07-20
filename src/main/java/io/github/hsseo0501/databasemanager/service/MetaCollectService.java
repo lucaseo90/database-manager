@@ -1,10 +1,10 @@
 package io.github.hsseo0501.databasemanager.service;
 
 import io.github.hsseo0501.databasemanager.model.Column;
+import io.github.hsseo0501.databasemanager.model.ExportedKey;
 import io.github.hsseo0501.databasemanager.model.PrimaryKey;
 import io.github.hsseo0501.databasemanager.model.Procedure;
 
-import java.sql.Connection;
 import java.sql.ResultSet;
 import java.util.List;
 import java.util.Map;
@@ -31,7 +31,7 @@ public interface MetaCollectService {
 
     List<Column> getColumnPrivileges(String vendor, String url, String id, String password, String catalog, String schema, String table, String columnNamePattern) throws Exception;
 
-    ResultSet getExportedKeys(String vendor, String url, String id, String password) throws Exception;
+    List<ExportedKey> getExportedKeys(String vendor, String url, String id, String password, String catalog, String schema, String tableName) throws Exception;
 
     ResultSet getForeignKeys(String vendor, String url, String id, String password, String catalog, String schema, String table);
 
