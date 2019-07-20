@@ -33,7 +33,7 @@ public interface MetaCollectService {
 
     List<ExportedKey> getExportedKeys(String vendor, String url, String id, String password, String catalog, String schema, String tableName) throws Exception;
 
-    ResultSet getForeignKeys(String vendor, String url, String id, String password, String catalog, String schema, String table);
+    List<ExportedKey> getForeignKeys(String vendor, String url, String id, String password, String catalog, String schema, String tableName) throws Exception;
 
     String getRowSetMetaData(String vendor, String url, String id, String password, String sqlQuery) throws Exception;
 

@@ -267,49 +267,50 @@ public class MetaCollectServiceImpl implements MetaCollectService {
         List<ExportedKey> exportedKeyList = new LinkedList<>();
         DatabaseMetaData databaseMetaData = getDatabaseMetaData(vendor, url, id, password);
         ResultSet exportedKeys = databaseMetaData.getExportedKeys(catalog, schema, tableName);
-        while (exportedKeys.next()) {
-            ExportedKey exportedKey = new ExportedKey();
-            exportedKey.setPkName(exportedKeys.getString(Constants.Database.META_PK_NAME));
-            exportedKey.setPkTableCatalog(exportedKeys.getString(Constants.Database.META_PK_CATALOG));
-            exportedKey.setPkTableSchema(exportedKeys.getString(Constants.Database.META_PK_SCHEMA));
-            exportedKey.setPkTableName(exportedKeys.getString(Constants.Database.META_PK_TABLE_NAME));
-            exportedKey.setPkColumnName(exportedKeys.getString(Constants.Database.META_PK_COLUMN_NAME));
-
-            exportedKey.setFkName(exportedKeys.getString(Constants.Database.META_FK_NAME));
-            exportedKey.setFkTableCatalog(exportedKeys.getString(Constants.Database.META_FK_CATALOG));
-            exportedKey.setFkTableSchema(exportedKeys.getString(Constants.Database.META_FK_SCHEMA));
-            exportedKey.setFkTableName(exportedKeys.getString(Constants.Database.META_FK_TABLE_NAME));
-            exportedKey.setFkColumnName(exportedKeys.getString(Constants.Database.META_FK_COLUMN_NAME));
-
-            exportedKey.setKeySequence(exportedKeys.getString(Constants.Database.META_KEY_SEQUENCE));
-            short updateRule = exportedKeys.getShort(Constants.Database.META_KEY_UPDATE_RULE);
-            exportedKey.setUpdateRule(getUpdateRule(updateRule));
-            short deleteRule = exportedKeys.getShort(Constants.Database.META_KEY_DELETE_RULE);
-            exportedKey.setDeleteRule(getDeleteRule(deleteRule));
-            short deferrability = exportedKeys.getShort(Constants.Database.META_KEY_DEFERRABILITY);
-            exportedKey.setDeferrability(getDeferrability(deferrability));
-            exportedKeyList.add(exportedKey);
-        }
+        exportedKeyList = getKeyMeta(exportedKeys);
         return exportedKeyList;
+    }
+
+    private List<ExportedKey> getKeyMeta(ResultSet resultSet) throws Exception {
+        List<ExportedKey> keyMetaList = new LinkedList<>();
+        while (resultSet.next()) {
+            ExportedKey exportedKey = new ExportedKey();
+            exportedKey.setPkName(resultSet.getString(Constants.Database.META_PK_NAME));
+            exportedKey.setPkTableCatalog(resultSet.getString(Constants.Database.META_PK_CATALOG));
+            exportedKey.setPkTableSchema(resultSet.getString(Constants.Database.META_PK_SCHEMA));
+            exportedKey.setPkTableName(resultSet.getString(Constants.Database.META_PK_TABLE_NAME));
+            exportedKey.setPkColumnName(resultSet.getString(Constants.Database.META_PK_COLUMN_NAME));
+
+            exportedKey.setFkName(resultSet.getString(Constants.Database.META_FK_NAME));
+            exportedKey.setFkTableCatalog(resultSet.getString(Constants.Database.META_FK_CATALOG));
+            exportedKey.setFkTableSchema(resultSet.getString(Constants.Database.META_FK_SCHEMA));
+            exportedKey.setFkTableName(resultSet.getString(Constants.Database.META_FK_TABLE_NAME));
+            exportedKey.setFkColumnName(resultSet.getString(Constants.Database.META_FK_COLUMN_NAME));
+
+            exportedKey.setKeySequence(resultSet.getString(Constants.Database.META_KEY_SEQUENCE));
+            short updateRule = resultSet.getShort(Constants.Database.META_KEY_UPDATE_RULE);
+            exportedKey.setUpdateRule(getUpdateRule(updateRule));
+            short deleteRule = resultSet.getShort(Constants.Database.META_KEY_DELETE_RULE);
+            exportedKey.setDeleteRule(getDeleteRule(deleteRule));
+            short deferrability = resultSet.getShort(Constants.Database.META_KEY_DEFERRABILITY);
+            exportedKey.setDeferrability(getDeferrability(deferrability));
+            keyMetaList.add(exportedKey);
+        }
+        return keyMetaList;
     }
 
     private static String getUpdateRule(short updateRule) {
         if (updateRule == DatabaseMetaData.importedKeyNoAction) {
             return "importedKeyNoAction";
-        }
-        else if (updateRule == DatabaseMetaData.importedKeyCascade) {
+        } else if (updateRule == DatabaseMetaData.importedKeyCascade) {
             return "importedKeyCascade";
-        }
-        else if (updateRule == DatabaseMetaData.importedKeySetNull) {
+        } else if (updateRule == DatabaseMetaData.importedKeySetNull) {
             return "importedKeySetNull";
-        }
-        else if (updateRule == DatabaseMetaData.importedKeySetDefault) {
+        } else if (updateRule == DatabaseMetaData.importedKeySetDefault) {
             return "importedKeySetDefault";
-        }
-        else if (updateRule == DatabaseMetaData.importedKeyRestrict) {
+        } else if (updateRule == DatabaseMetaData.importedKeyRestrict) {
             return "importedKeyRestrict";
-        }
-        else {
+        } else {
             return "nobody knows";
         }
     }
@@ -317,20 +318,15 @@ public class MetaCollectServiceImpl implements MetaCollectService {
     private static String getDeleteRule(short deleteRule) {
         if (deleteRule == DatabaseMetaData.importedKeyNoAction) {
             return "importedKeyNoAction";
-        }
-        else if (deleteRule == DatabaseMetaData.importedKeyCascade) {
+        } else if (deleteRule == DatabaseMetaData.importedKeyCascade) {
             return "importedKeyCascade";
-        }
-        else if (deleteRule == DatabaseMetaData.importedKeySetNull) {
+        } else if (deleteRule == DatabaseMetaData.importedKeySetNull) {
             return "importedKeySetNull";
-        }
-        else if (deleteRule == DatabaseMetaData.importedKeyRestrict) {
+        } else if (deleteRule == DatabaseMetaData.importedKeyRestrict) {
             return "importedKeyRestrict";
-        }
-        else if (deleteRule == DatabaseMetaData.importedKeySetDefault) {
+        } else if (deleteRule == DatabaseMetaData.importedKeySetDefault) {
             return "importedKeySetDefault";
-        }
-        else {
+        } else {
             return "nobody knows";
         }
     }
@@ -338,21 +334,22 @@ public class MetaCollectServiceImpl implements MetaCollectService {
     private static String getDeferrability(short deferrability) {
         if (deferrability == DatabaseMetaData.importedKeyInitiallyDeferred) {
             return "importedKeyInitiallyDeferred";
-        }
-        else if (deferrability == DatabaseMetaData.importedKeyInitiallyImmediate) {
+        } else if (deferrability == DatabaseMetaData.importedKeyInitiallyImmediate) {
             return "importedKeyInitiallyImmediate";
-        }
-        else if (deferrability == DatabaseMetaData.importedKeyNotDeferrable) {
+        } else if (deferrability == DatabaseMetaData.importedKeyNotDeferrable) {
             return "importedKeyNotDeferrable";
-        }
-        else {
+        } else {
             return "nobody knows";
         }
     }
 
     @Override
-    public ResultSet getForeignKeys(String vendor, String url, String id, String password, String catalog, String schema, String table) {
-        return null;
+    public List<ExportedKey> getForeignKeys(String vendor, String url, String id, String password, String catalog, String schema, String tableName) throws Exception {
+        List<ExportedKey> exportedKeyList = new LinkedList<>();
+        DatabaseMetaData databaseMetaData = getDatabaseMetaData(vendor, url, id, password);
+        ResultSet importedKeys = databaseMetaData.getImportedKeys(catalog, schema, tableName);
+        exportedKeyList = getKeyMeta(importedKeys);
+        return exportedKeyList;
     }
 
     @Override

@@ -33,6 +33,7 @@ public class MetaCollectServiceTest {
     private String testDatabaseBestRowIdentifierTest = "[]";
     private String catalogTestResult = "[\"postgres\"]";
     private String exportedKeyTestResult = "[{\"pkTableCatalog\":null,\"pkTableSchema\":\"public\",\"pkTableName\":\"address\",\"pkColumnName\":\"address_id\",\"fkTableCatalog\":null,\"fkTableSchema\":\"public\",\"fkTableName\":\"customer\",\"fkColumnName\":\"address_id\",\"keySequence\":\"1\",\"updateRule\":\"importedKeyCascade\",\"deleteRule\":\"importedKeyRestrict\",\"pkName\":\"address_pkey\",\"fkName\":\"customer_address_id_fkey\",\"deferrability\":\"importedKeyNotDeferrable\"},{\"pkTableCatalog\":null,\"pkTableSchema\":\"public\",\"pkTableName\":\"address\",\"pkColumnName\":\"address_id\",\"fkTableCatalog\":null,\"fkTableSchema\":\"public\",\"fkTableName\":\"staff\",\"fkColumnName\":\"address_id\",\"keySequence\":\"1\",\"updateRule\":\"importedKeyCascade\",\"deleteRule\":\"importedKeyRestrict\",\"pkName\":\"address_pkey\",\"fkName\":\"staff_address_id_fkey\",\"deferrability\":\"importedKeyNotDeferrable\"},{\"pkTableCatalog\":null,\"pkTableSchema\":\"public\",\"pkTableName\":\"address\",\"pkColumnName\":\"address_id\",\"fkTableCatalog\":null,\"fkTableSchema\":\"public\",\"fkTableName\":\"store\",\"fkColumnName\":\"address_id\",\"keySequence\":\"1\",\"updateRule\":\"importedKeyCascade\",\"deleteRule\":\"importedKeyRestrict\",\"pkName\":\"address_pkey\",\"fkName\":\"store_address_id_fkey\",\"deferrability\":\"importedKeyNotDeferrable\"}]";
+    private String foreignKeyTestResult = "[{\"pkTableCatalog\":null,\"pkTableSchema\":\"public\",\"pkTableName\":\"city\",\"pkColumnName\":\"city_id\",\"fkTableCatalog\":null,\"fkTableSchema\":\"public\",\"fkTableName\":\"address\",\"fkColumnName\":\"city_id\",\"keySequence\":\"1\",\"updateRule\":\"importedKeyNoAction\",\"deleteRule\":\"importedKeyNoAction\",\"pkName\":\"city_pkey\",\"fkName\":\"fk_address_city\",\"deferrability\":\"importedKeyNotDeferrable\"}]";
 
     @Autowired
     private ObjectMapper objectMapper;
@@ -123,5 +124,12 @@ public class MetaCollectServiceTest {
         Connection connection = DriverManager.getConnection(url, id, password);
         List<ExportedKey> exportedKeyList = metaCollectService.getExportedKeys(vendor, url, id, password, connection.getCatalog(), null, "address");
         Assert.assertEquals(exportedKeyTestResult, objectMapper.writeValueAsString(exportedKeyList));
+    }
+
+    @Test
+    public void getForeignKeysTest() throws Exception {
+        Connection connection = DriverManager.getConnection(url, id, password);
+        List<ExportedKey> foreignKeyList = metaCollectService.getForeignKeys(vendor, url, id, password, connection.getCatalog(), null, "address");
+        Assert.assertEquals(foreignKeyTestResult, objectMapper.writeValueAsString(foreignKeyList));
     }
 }
