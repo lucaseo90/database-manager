@@ -5,7 +5,7 @@ public class Constants {
         public static final String DB_VENDOR_POSTGRESQL = "postgresql";
         public static final String JDBC_DRIVER_POSTGRESQL = "org.postgresql.Driver";
 
-        public static final String META_TABLE = "TABLE_CAT";
+        public static final String META_TABLE_CATALOG = "TABLE_CAT";
         public static final String META_TABLE_SCHEMA = "TABLE_SCHEM";
         public static final String META_TABLE_NAME = "TABLE_NAME";
         public static final String META_TABLE_TYPE = "TABLE_TYPE";

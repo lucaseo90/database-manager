@@ -26,7 +26,7 @@ public class MetaCollectServiceImpl implements MetaCollectService {
 
             while (columns.next()) {
                 Column column = new Column();
-                column.setCatalog(columns.getString(Constants.Database.META_TABLE));
+                column.setCatalog(columns.getString(Constants.Database.META_TABLE_CATALOG));
                 column.setSchema(columns.getString(Constants.Database.META_TABLE_SCHEMA));
                 column.setTableName(columns.getString(Constants.Database.META_TABLE_NAME));
                 column.setColumnName(columns.getString(Constants.Database.META_COLUMN_NAME));
@@ -60,7 +60,7 @@ public class MetaCollectServiceImpl implements MetaCollectService {
 
             while (primaryKeys.next()) {
                 PrimaryKey primaryKey = new PrimaryKey();
-                primaryKey.setCatalog(primaryKeys.getString(Constants.Database.META_TABLE));
+                primaryKey.setCatalog(primaryKeys.getString(Constants.Database.META_TABLE_CATALOG));
                 primaryKey.setSchema(primaryKeys.getString(Constants.Database.META_TABLE_SCHEMA));
                 primaryKey.setTableName(primaryKeys.getString(Constants.Database.META_TABLE_NAME));
                 primaryKey.setColumnName(primaryKeys.getString(Constants.Database.META_COLUMN_NAME));
@@ -246,7 +246,7 @@ public class MetaCollectServiceImpl implements MetaCollectService {
         ResultSet columnPrivileges = databaseMetaData.getColumnPrivileges(catalog, schema, table, columnNamePattern);
         while (columnPrivileges.next()) {
             Column column = new Column();
-            column.setCatalog(columnPrivileges.getString(Constants.Database.META_TABLE));
+            column.setCatalog(columnPrivileges.getString(Constants.Database.META_TABLE_CATALOG));
             column.setSchema(columnPrivileges.getString(Constants.Database.META_TABLE_SCHEMA));
             column.setTableName(columnPrivileges.getString(Constants.Database.META_TABLE_NAME));
             column.setColumnName(columnPrivileges.getString(Constants.Database.META_COLUMN_NAME));
@@ -377,13 +377,13 @@ public class MetaCollectServiceImpl implements MetaCollectService {
         while (procedureColumns.next()) {
             Procedure procedure = new Procedure();
             procedure.setProcedureCatalog(procedureColumns.getString(Constants.Database.META_PROCEDURE_CATALOG));
-            procedure.setProcedureCatalog(procedureColumns.getString(Constants.Database.META_PROCEDURE_SCHEMA));
-            procedure.setProcedureCatalog(procedureColumns.getString(Constants.Database.META_PROCEDURE_NAME));
-            procedure.setProcedureCatalog(procedureColumns.getString(Constants.Database.META_COLUMN_NAME));
+            procedure.setProcedureSchema(procedureColumns.getString(Constants.Database.META_PROCEDURE_SCHEMA));
+            procedure.setProcedureName(procedureColumns.getString(Constants.Database.META_PROCEDURE_NAME));
+            procedure.setProcedureColumnName(procedureColumns.getString(Constants.Database.META_COLUMN_NAME));
             short columnType = procedureColumns.getShort(Constants.Database.META_COLUMN_TYPE);
-            procedure.setProcedureCatalog(getColumnType(columnType));
-            procedure.setProcedureCatalog(procedureColumns.getString(Constants.Database.META_COLUMN_TYPE_NAME));
-            procedure.setProcedureCatalog(procedureColumns.getString(Constants.Database.META_COLUMN_NULLABLE));
+            procedure.setProcedureColumnType(getColumnType(columnType));
+            procedure.setProcedureTypeName(procedureColumns.getString(Constants.Database.META_COLUMN_TYPE_NAME));
+            procedure.setProcedureNullable(procedureColumns.getString(Constants.Database.META_COLUMN_NULLABLE));
             procedureList.add(procedure);
         }
         return procedureList;
@@ -413,7 +413,7 @@ public class MetaCollectServiceImpl implements MetaCollectService {
         ResultSet columnPrivileges = databaseMetaData.getTablePrivileges(catalog, schemaPattern, tableNamePattern);
         while (columnPrivileges.next()) {
             Column column = new Column();
-            column.setCatalog(columnPrivileges.getString(Constants.Database.META_TABLE));
+            column.setCatalog(columnPrivileges.getString(Constants.Database.META_TABLE_CATALOG));
             column.setSchema(columnPrivileges.getString(Constants.Database.META_TABLE_SCHEMA));
             column.setTableName(columnPrivileges.getString(Constants.Database.META_TABLE_NAME));
 
@@ -435,8 +435,8 @@ public class MetaCollectServiceImpl implements MetaCollectService {
         ResultSet typeInfo = databaseMetaData.getTypeInfo();
         while (typeInfo.next()) {
             Column column = new Column();
-            column.setCatalog(typeInfo.getString(Constants.Database.META_COLUMN_TYPE_NAME));
-            column.setSchema(typeInfo.getString(Constants.Database.META_COLUMN_DATA_TYPE));
+            column.setTypeName(typeInfo.getString(Constants.Database.META_COLUMN_TYPE_NAME));
+            column.setDataType(typeInfo.getString(Constants.Database.META_COLUMN_DATA_TYPE));
             typeList.add(column);
         }
         return typeList;
